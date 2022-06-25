@@ -1,0 +1,313 @@
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+            rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./scripts/web3.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <style>
+        * {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        body {
+            background-color: black;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        button {
+            border: 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<script type='text/javascript'>
+    var user = JSON.parse('<%-JSON.stringify(user_data)%>')
+    var monsters = JSON.parse('<%-JSON.stringify(monsters)%>')
+</script>
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <img src="https://www.kindpng.com/picc/m/135-1352000_pokeball-pixel-art-hd-png-download.png" style="height: auto; width: 50px"><h2>Poke Game</h2>
+    <a href="/play_pokemon" class="ml-5">
+        <button type="button" class="btn btn-primary" id="playgame">Play</button>
+    </a>
+
+    <!-- Sidebar Toggle (Topbar) -->
+    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+        <i class="fa fa-bars"></i>
+    </button>
+    <ul class="navbar-nav ml-auto">
+        <!-- Nav Item - User Information -->
+        <% if(current_user !== null) { %>
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="address"><%= current_user %></span>
+                    <img class="img-profile rounded-circle"
+                         src="img/undraw_profile.svg">
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                     aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Profile
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Settings
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Activity Log
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal" id="logout">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Logout
+                    </a>
+                </div>
+            </li>
+        <%} else {%>
+            <button type="button" class="btn btn-primary" id="login">Login</button>
+        <%}%>
+    </ul>
+
+</nav>
+<div style="display: inline-block; position: relative; width: 100%" class="d-flex justify-content-center">
+    <div
+            id="overlappingDiv"
+            style="
+      background-color: black;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10;
+    "
+    ></div>
+        <canvas></canvas>
+    <div id="userInterface" style="display: none">
+        <!-- Represents health bar of draggle (enemy) -->
+        <div
+                style="
+        background-color: white;
+        width: 250px;
+        height: 80px;
+        position: absolute;
+        top: 50px;
+        left: 300px;
+        border: 4px black solid;
+        padding: 12px;
+      "
+        >
+            <h1 style="font-size: 16px" id="eName">Draggle</h1>
+            <div style="position: relative">
+                <div
+                        style="height: 5px; background-color: #ccc; margin-top: 10px"
+                ></div>
+                <div
+                        id="enemyHealthBar"
+                        style="
+            height: 5px;
+            background-color: green;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+          "
+                ></div>
+                <div
+                        id="enemyManaBar"
+                        style="
+            height: 5px;
+            background-color: blue;
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+          "
+                ></div>
+            </div>
+        </div>
+
+        <!-- Represents health bar of emby (us) -->
+        <div
+                style="
+        background-color: white;
+        width: 250px;
+        height: 80px;
+        position: absolute;
+        top: 330px;
+        right: 300px;
+        border: 4px black solid;
+        padding: 12px;
+      "
+        >
+            <h1 style="font-size: 16px" id="usName">Emby</h1>
+            <div style="position: relative">
+                <div
+                        style="height: 5px; background-color: #ccc; margin-top: 10px"
+                ></div>
+                <div
+                        id="playerHealthBar"
+                        style="
+            height: 5px;
+            background-color: green;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+          "
+                ></div>
+                <div
+                        id="playerManaBar"
+                        style="
+            height: 5px;
+            background-color: blue;
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+          "
+                ></div>
+            </div>
+        </div>
+
+        <div
+                style="
+        background-color: white;
+        height: 140px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-top: 4px black solid;
+        display: flex;
+      "
+        >
+            <div
+                    id="dialogueBox"
+                    style="
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-color: white;
+          padding: 12px;
+          display: none;
+          cursor: pointer;
+        "
+            >
+            </div>
+            <div
+                    id="attacksBox"
+                    style="
+          width: 66.66%;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+        "
+            ></div>
+            <div
+                    style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 33.33%;
+          border-left: 4px black solid;
+        "
+            >
+                <h1 id="attackType" style="font-size: 16px">Attack Type</h1>
+            </div>
+        </div>
+    </div>
+    <div id="pickMonsters" style="display: none;background-color: white;
+        width: 1024px;
+        height: 600px;
+        position: absolute;
+        top: 0px;
+        left: 256px;
+        border: 4px black solid;
+        overflow-y: scroll;
+        padding: 12px">
+        <div class="container-fluid mx-5">
+            <h2>Your Monster from nft</h2>
+            <div class="row flex-row" id="container_pick">
+
+            </div>
+        </div>
+    </div>
+
+    <div style="background-color: white;
+        width: 200px;
+        height: 100px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        border: 4px black solid;
+        padding: 12px;
+        font-size: 12px">
+        POK in pocket <br>
+        <p id="eth_pocket"><%= user_data.pok %></p> POKs
+    </div>
+
+    <div style="background-color: white;
+        width: 200px;
+        height: 100px;
+        position: absolute;
+        top: 150px;
+        left: 0px;
+        border: 4px black solid;
+        padding: 12px;
+        font-size: 12px; display: none" id="runningTx">
+        POK in pocket <br>
+        Transaction is running...
+    </div>
+</div>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"
+        integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+></script>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
+        integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+></script>
+<script src="./js/data/audio.js"></script>
+<script src="./js/data/battleZones.js"></script>
+<script src="./js/data/collisions.js"></script>
+<script src="./js/data/attacks.js"></script>
+<script src="./js/data/monsters.js"></script>
+<script src="./js/data/characters.js"></script>
+<script src="./js/classes.js"></script>
+<script src="./js/index.js"></script>
+<script src="./js/battleScene.js"></script>
+<script src="./js/update_data.js"></script>
+<script src="./js/check_wallet.js"></script>
+<script src="./vendor/jquery/jquery.min.js"></script>
+<script src="./vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="./vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="./vendor/chart.js/Chart.min.js"></script>
+<form method="post" action="logout" id="logoutForm">
+</form>

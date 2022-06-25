@@ -1,0 +1,64 @@
+{
+  "players": [
+    {
+      "id": "0xbCB90E966C4B740ED1c0f8D6b4a6FDFaECe9615F",
+      "pok": 19026820822182,
+      "eth": -0.25
+    },
+    {
+      "id": "0xfBA53241516b84fdfE8ACc22095fb135042a281c",
+      "pok": 6105314546055,
+      "eth": -0.2
+    }
+  ],
+  "energy": [
+    {
+      "player_id": "0xbCB90E966C4B740ED1c0f8D6b4a6FDFaECe9615F",
+      "monster_id": "Enby",
+      "energy": 3,
+      "id": 1
+    },
+    {
+      "player_id": "0xfBA53241516b84fdfE8ACc22095fb135042a281c",
+      "monster_id": "Dragglee",
+      "energy": 2,
+      "id": 2
+    }
+  ],
+  "monsters": [
+    {
+      "id": "Enby",
+      "name": "Enby",
+      "contract": "0x050e5D5235a453D1c02271cE56b14586b4C6c9AE",
+      "attacks": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "mana": 20,
+      "hp": 100,
+      "image": {
+        "src": "./img/embySprite.png"
+      },
+      "avatar": "./img/embyAvatar.png"
+    },
+    {
+      "id": "Dragglee",
+      "name": "Dragglee",
+      "contract": "0x74CA414c4793A54e0c0812E3119fE62C925Eebbb",
+      "attacks": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "mana": 20,
+      "hp": 110,
+      "image": {
+        "src": "./img/draggleSprite.png"
+      },
+      "avatar": "./img/draggleAvatar.png"
+    }
+  ]
+}
